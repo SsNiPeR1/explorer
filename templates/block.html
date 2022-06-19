@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>ResinScan</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/style.css">
+        <script src="/static/redir.js"></script>
+        <base href="/block/{{ number }}/" />
+        <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <h1><a href="/" class="a">ResinScan <i class='fab fa-ethereum'></i></a></h1>
+        <p class="codebox">
+        Difficulty: {{ difficulty }} <br>
+        Extra data: {{ extraData }} <br>
+        Gas limit: {{ gasLimit }} <br>
+        Gas used: {{ gasUsed }} <br>
+        Hash: {{ hash }} <br>
+        Logs bloom: {{ logsBloom }} <br>
+        Miner: <a href="/account/{{ miner }}">{{ miner }}</a> <br>
+        Mix hash: {{ mixHash }} <br>
+        Nonce: {{ nonce }} <br>
+        Block number: {{ number }} <br>
+        Parent hash: {{ parentHash }} <br>
+        Receipts root: {{ receiptsRoot }} <br>
+        SHA-3 Uncles: {{ sha3Uncles }} <br>
+        Size: {{ size }} <br>
+        State root: {{ stateRoot }} <br>
+        Timestamp: {{ timestamp }} <br>
+        Total difficulty: {{ totalDifficulty }} <br>
+        {% if transactions %}
+        Transactions: <a href="transactions">full list here</a><br>
+        {% endif %}
+        Transactions root: {{ transactionsRoot }} <br>
+        {% if uncles != "None" %}
+        Uncles: <a href="uncles">full list here</a><br>
+        {% endif %}
+        </p>
+    </body>
+</html>

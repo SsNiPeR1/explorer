@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>ResinScan</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/style.css">
+        <script src="/static/redir.js"></script>
+        <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <h1><a href="/" class="a">ResinScan <i class='fab fa-ethereum'></i></a></h1>
+        {% if not txTo %}
+            Transasction {{ txHash }} is a contract creation transaction.
+            <p class="codebox">
+                From:  <a href="/account/{{ txFrom }}">{{ txFrom }}</a> <br>
+                To: <a href="/contractInfo">more info</a> <br>
+                Value: {{ txValue }} {{ coinName }} <br>
+                Gas used: {{ txGas }} <br>
+                Gas price: {{ txGasPrice }} {{ coinName }}
+            </p>
+        {% else %}
+            Transaction {{ txHash }}:
+            <p class="codebox">
+                From: <a href="/account/{{ txFrom }}">{{ txFrom }}</a> <br>
+                To: <a href="/account/{{ txTo }}">{{ txTo }}</a> <br>
+                Value: {{ txValue }} {{ coinName }} <br>
+                Gas used: {{ txGas }} <br>
+                Gas price: {{ txGasPrice }} {{ coinName }}
+            </p>
+        {% endif %}
+        
+    </body>
+</html>
