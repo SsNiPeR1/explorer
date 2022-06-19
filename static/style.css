@@ -82,3 +82,12 @@ a:hover {
     text-decoration: none;
     transition: all 0.2s ease-in-out;
 }
+
+.lowerleft
+{
+    margin-bottom: 3px;
+    margin-left : 1px;
+    position: fixed;
+    bottom: 0;
+    color: white;
+}

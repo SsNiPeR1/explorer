@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title>ResinScan</title>
+        <title>{{ coinSymbolLower }}Scan</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/static/style.css">
         <script src="/static/redir.js"></script>
         <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <h1><a href="/" class="a">ResinScan <i class='fab fa-ethereum'></i></a></h1>
+        <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
         <!--
         <input type="text" id="blockNumber" placeholder="Search for a block number...">
         <button id="search" onclick="redirBlock()">Search</button> <br>
@@ -17,9 +17,11 @@
         <button id="search" onclick="redirAddress()">Search</button> <br>
         <p>Current number of blocks in the network: <a href=/block/{{ latestBlock }}>{{ latestBlock }}</a></p>
         -->
-        <div>
+        <div class="center">
         <form method="POST" class="center">
-            <input name="text" placeholder="Search for an address, block number or transaction..." size="50">
+            <input name="text" placeholder="Search for an address, block number or transaction..." size="50"> <br>
         </form>
+        </div>
+        <p class="lowerLeft">There are <a href="/block/{{ latestBlock }}">{{ latestBlock }}</a> blocks in the network.</p>
     </body>
 </html>

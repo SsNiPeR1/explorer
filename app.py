@@ -1,29 +1,43 @@
 from web3 import Web3
 from flask import Flask, render_template, send_file, request, redirect
+import json
+
+config = open('config.json')
+cfg = json.load(config)
+
+coinName = cfg['coinName']
+coinSymbol = cfg['coinSymbol']
+coinSymbolLower = cfg['coinSymbolLower']
+rpcUrl = cfg['rpcUrl']
 
 app = Flask(__name__)
-coinName = "RESIN"
-web3 = Web3(Web3.HTTPProvider("https://cum.ssniper1.ml"))
+web3 = Web3(Web3.HTTPProvider(rpcUrl))
+
 
 @app.route("/static/<file>")
 def style(file):
     return send_file("static/{file}".format(file=file))
 
+
 @app.route("/")
 def index():
     latestBlock = web3.eth.block_number
-    return render_template("index.html", latestBlock=latestBlock)
+    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock)
 
 # --- API block --- #
+
+
 @app.route("/api/block/<int:number>")
 def api_block(number):
     block = web3.eth.get_block(number)
     return str(block)[14:-1]
 
+
 @app.route("/api/txhash/<txhash>")
 def api_txhash(txhash):
     tx = str(web3.eth.getTransaction(txhash))
     return tx
+
 
 @app.route("/api/balance/<address>")
 def api_balance(address):
@@ -32,9 +46,11 @@ def api_balance(address):
 # --- End API block --- #
 
 # --- Explorer block --- #
+
+
 @app.route("/block/<int:number>")
 def block(number):
-    
+
     try:
         block = web3.eth.get_block(number)
     except:
@@ -48,7 +64,7 @@ def block(number):
         logsBloom = "0x0"
     else:
         logsBloom = block["logsBloom"].hex()
-    
+
     miner = block["miner"]
     mixHash = block["mixHash"].hex()
     nonce = block["nonce"].hex()
@@ -60,7 +76,7 @@ def block(number):
     stateRoot = block["stateRoot"].hex()
     timestamp = block["timestamp"]
     totalDifficulty = block["totalDifficulty"]
-    
+
     if not block['transactions']:
         transactions = "None"
     else:
@@ -71,15 +87,16 @@ def block(number):
     uncles = block["uncles"]
 
     return render_template("block.html", difficulty=str(difficulty), extraData=str(extraData),
-                            gasLimit=str(gasLimit), gasUsed=str(gasUsed),
-                            hash=str(hash), logsBloom=str(logsBloom), 
-                            miner=str(miner), mixHash=str(mixHash), 
-                            nonce=str(nonce), number=str(number), 
-                            parentHash=str(parentHash), receiptsRoot=str(receiptsRoot), 
-                            sha3Uncles=str(sha3Uncles), size=str(size), 
-                            stateRoot=str(stateRoot), timestamp=str(timestamp), 
-                            totalDifficulty=str(totalDifficulty), transactions=str(transactions), 
-                            transactionsRoot=str(transactionsRoot), uncles=str(uncles))
+                           gasLimit=str(gasLimit), gasUsed=str(gasUsed),
+                           hash=str(hash), logsBloom=str(logsBloom),
+                           miner=str(miner), mixHash=str(mixHash),
+                           nonce=str(nonce), number=str(number),
+                           parentHash=str(parentHash), receiptsRoot=str(receiptsRoot),
+                           sha3Uncles=str(sha3Uncles), size=str(size),
+                           stateRoot=str(stateRoot), timestamp=str(timestamp),
+                           totalDifficulty=str(totalDifficulty), transactions=str(transactions),
+                           transactionsRoot=str(transactionsRoot), uncles=str(uncles), coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 @app.route("/block/<int:number>/uncles")
 def uncles(number):
@@ -92,7 +109,8 @@ def uncles(number):
     parsed = []
     for uncle in uncles:
         parsed.append(str(uncle.hex()))
-    return render_template("uncles.html", uncles=parsed, number=number)
+    return render_template("uncles.html", uncles=parsed, number=number, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 @app.route("/block/<int:number>/transactions")
 def transactions(number):
@@ -108,7 +126,9 @@ def transactions(number):
         parsed.append(str(transaction.hex()))
     if not parsed:
         parsed = ["None"]
-    return render_template("transactions.html", transactions=parsed, number=number)
+    return render_template("transactions.html", transactions=parsed, number=number, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
+
 @app.route("/bloominfo/<int:block>")
 def bloominfo(block):
     try:
@@ -117,7 +137,8 @@ def bloominfo(block):
         return render_template("error.html", error="Block not found")
     bloom = block["logsBloom"].hex()
     blockNumber = block["number"]
-    return render_template("bloominfo.html", bloom=bloom, blockNumber=blockNumber)
+    return render_template("bloominfo.html", bloom=bloom, blockNumber=blockNumber, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 @app.route("/account/<address>")
 def account(address):
@@ -125,7 +146,8 @@ def account(address):
     nonce = web3.eth.getTransactionCount(address)
     balance_eth = web3.fromWei(balance, "ether")
 
-    return render_template("account.html", address=address, balance_eth=balance_eth, nonce=str(nonce), coinName=coinName)
+    return render_template("account.html", address=address, balance_eth=balance_eth, nonce=str(nonce), coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 @app.route("/tx/<txhash>")
 def tx(txhash):
@@ -146,10 +168,11 @@ def tx(txhash):
     txValue = format(txValueUnformatted, '.18f')
     txBlockHash = tx["blockHash"]
     txBlockNumber = tx["blockNumber"]
-    
-    return render_template("tx.html", txFrom=txFrom, txTo=txTo, txGas=txGas, txGasPrice=txGasPrice,
-                            txHash=txHash, txNonce=txNonce, txValue=txValue, txBlockHash=txBlockHash,
-                            txBlockNumber=txBlockNumber, coinName=coinName)
+
+    return render_template("tx.html", coinName=coinName, txFrom=txFrom, txTo=txTo, txGas=txGas, txGasPrice=txGasPrice,
+                           txHash=txHash, txNonce=txNonce, txValue=txValue, txBlockHash=txBlockHash,
+                           txBlockNumber=txBlockNumber, coinSymbol=coinSymbol, coinSymbolLower=coinSymbolLower)
+
 
 @app.route('/', methods=['POST'])
 def define_redirect():
@@ -164,7 +187,7 @@ def define_redirect():
             if int(text):
                 type = "block"
         except:
-            return render_template("error.html", error="Malformed input")
+            return render_template("error.html", error="Malformed input", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
     if type == "account":
         print(type)
@@ -179,7 +202,14 @@ def define_redirect():
         del type
         return redirect("/block/" + text)
 
-    return render_template("error.html", error="Malformed input")
+    return render_template("error.html", error="Malformed input", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
+
+@app.route("/contractinfo")
+@app.route("/contractInfo")
+def contractinfo():
+    return render_template("contractinfo.html", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 # --- End Explorer block --- #
 app.run(host="0.0.0.0")

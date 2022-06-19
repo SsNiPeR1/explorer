@@ -1,17 +1,20 @@
 <html>
-    <head>
-        <title>ResinScan</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/style.css">
-        <script src="/static/redir.js"></script>
-        <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
-    </head>
-    <body>
-        <h1><a href="/" class="a">ResinScan <i class='fab fa-ethereum'></i></a></h1>
-        Balance of {{ address }}:
-        <p class="codebox">
-            {{ balance_eth }} {{ coinName }}
-        </p>
-        Address has a total of {{ nonce }} transactions.
-    </body>
+
+<head>
+    <title>{{ coinSymbolLower }}Scan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/redir.js"></script>
+    <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
+    Balance of {{ address }}:
+    <p class="codebox">
+        {{ balance_eth }} {{ coinSymbol }}
+    </p>
+    Address has a total of {{ nonce }} transactions.
+</body>
+
 </html>
