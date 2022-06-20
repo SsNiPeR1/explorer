@@ -54,7 +54,7 @@ def block(number):
     try:
         block = web3.eth.get_block(number)
     except:
-        return render_template("error.html", error="Block not found")
+        return render_template("error.html", error="Block not found", coinSymbolLower=coinSymbolLower)
     difficulty = block['difficulty']
     extraData = block["extraData"].hex()
     gasLimit = block["gasLimit"]
@@ -117,7 +117,7 @@ def transactions(number):
     try:
         block = web3.eth.get_block(number)
     except:
-        return render_template("error.html", error="Block not found")
+        return render_template("error.html", error="Block not found", coinSymbolLower=coinSymbolLower)
 
     transactions = block["transactions"]
     number = block["number"]
