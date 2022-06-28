@@ -4,6 +4,7 @@ html {
     -webkit-text-size-adjust: 100%;
     background-color: #191919;
     color: white;
+    overflow-wrap: break-word;
 }
 
 .codebox {

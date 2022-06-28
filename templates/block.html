@@ -17,11 +17,7 @@
         Gas limit: {{ gasLimit }} <br>
         Gas used: {{ gasUsed }} <br>
         Hash: {{ hash }} <br>
-        {% if logsBloom != "0x0" %}
-        Logs bloom: <a href="/bloominfo/{{ number }}">there.</a><br>
-        {% else %}
-        Logs bloom: 0x0<br>
-        {% endif %}
+        Logs bloom: {{ logsBloom }} <br>
         Miner: <a href="/account/{{ miner }}">{{ miner }}</a> <br>
         Mix hash: {{ mixHash }} <br>
         Nonce: {{ nonce }} <br>
