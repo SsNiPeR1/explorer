@@ -24,7 +24,7 @@ def index():
     account = request.cookies.get('account')
     print(account)
     if account is None:
-        account = "<a class=\"enableEthereumButton upperRight\">Connect MetaMask</a>"
+        account = "<a class=\"enableEthereumButton upperRight\" style=\"cursor: pointer;\">Connect MetaMask</a>"
     else:
         acc = account
         acc = web3.toChecksumAddress(acc)
