@@ -113,6 +113,7 @@ a:hover {
     right:0;
 }
 
+<<<<<<< HEAD
 button {
     font-size: 14px;
     font-family: 'Inconsolata', monospace;
@@ -135,3 +136,6 @@ button:hover {
     color: black;
     transition: all 0.3s ease-in-out;
 }
+=======
+.enableEthereumButton {cursor: pointer;}
+>>>>>>> fd465cbb37594e9eb262eab67bfe8cd1f855ca45
