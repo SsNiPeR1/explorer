@@ -21,9 +21,17 @@ def style(file):
 
 @app.route("/")
 def index():
+    account = request.cookies.get('account')
+    print(account)
+    if account is None:
+        account = "<a class=\"enableEthereumButton upperRight\">Connect MetaMask</a>"
+    else:
+        acc = account
+        acc = web3.toChecksumAddress(acc)
+        account = "<p class=\"upperRight\" style=\"margin-right: 44ch;\">Your address: </p><a class=\"upperRight\" href=\"/account/{acc}\">{acc}</a>".format(acc=acc)
     latestBlock = web3.eth.block_number
     gasPrice = web3.fromWei(web3.eth.gasPrice, "gwei")
-    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock, gasPrice=gasPrice)
+    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock, gasPrice=gasPrice, account=account)
 
 # --- API block --- #
 
