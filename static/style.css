@@ -4,6 +4,7 @@ html {
     -webkit-text-size-adjust: 100%;
     background-color: #191919;
     color: white;
+    overflow-wrap: break-word;
 }
 
 .codebox {
@@ -48,9 +49,10 @@ hr {
 }
 
 input {
-    color: #404040;
+    color: #909090;
+    background-color: #191919;
     border-radius: 5px;
-    border: 1px solid #262626;
+    border: 1.5px solid #262626;
     padding: 5px 10px;
     font-size: 14px;
 
@@ -91,3 +93,24 @@ a:hover {
     bottom: 0;
     color: white;
 }
+
+.lowerRight
+{
+    margin-bottom: 5px;
+    margin-right : 1px;
+    position:absolute;
+    bottom:0;
+    right:0;
+    color: white;
+}
+
+.upperRight
+{
+    margin-top: 5px;
+    margin-right : 2px;
+    position:absolute;
+    top:0;
+    right:0;
+}
+
+.enableEthereumButton {cursor: pointer;}

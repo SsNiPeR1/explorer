@@ -5,9 +5,11 @@
         <link rel="stylesheet" href="/static/style.css">
         <script src="/static/redir.js"></script>
         <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+        
     </head>
     <body>
         <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
+        {{ account|safe }}
         <!--
         <input type="text" id="blockNumber" placeholder="Search for a block number...">
         <button id="search" onclick="redirBlock()">Search</button> <br>
@@ -23,5 +25,9 @@
         </form>
         </div>
         <p class="lowerLeft">There are <a href="/block/{{ latestBlock }}">{{ latestBlock }}</a> blocks in the network.</p>
+        <p class="lowerLeft" style="margin-bottom: 25px; margin-left: -1px;">⛽ {{ gasPrice }} Gwei</p>
+        <p class="lowerRight">Source code of this website can be found on <a href="https://github.com/SsNiPeR1/explorer">GitHub <i class='fab fa-github'></a></i></p>
     </body>
+    <script src="/static/ethers-5.6.esm.min.js"></script>
+    <script src="/static/connect.js"></script>
 </html>

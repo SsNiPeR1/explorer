@@ -21,8 +21,17 @@ def style(file):
 
 @app.route("/")
 def index():
+    account = request.cookies.get('account')
+    print(account)
+    if account is None:
+        account = "<a class=\"enableEthereumButton upperRight\">Connect MetaMask</a>"
+    else:
+        acc = account
+        acc = web3.toChecksumAddress(acc)
+        account = "<p class=\"upperRight\" style=\"margin-right: 44ch;\">Your address: </p><a class=\"upperRight\" href=\"/account/{acc}\">{acc}</a>".format(acc=acc)
     latestBlock = web3.eth.block_number
-    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock)
+    gasPrice = web3.fromWei(web3.eth.gasPrice, "gwei")
+    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock, gasPrice=gasPrice, account=account)
 
 # --- API block --- #
 
@@ -54,7 +63,7 @@ def block(number):
     try:
         block = web3.eth.get_block(number)
     except:
-        return render_template("error.html", error="Block not found")
+        return render_template("error.html", error="Block not found", coinSymbolLower=coinSymbolLower)
     difficulty = block['difficulty']
     extraData = block["extraData"].hex()
     gasLimit = block["gasLimit"]
@@ -117,7 +126,7 @@ def transactions(number):
     try:
         block = web3.eth.get_block(number)
     except:
-        return render_template("error.html", error="Block not found")
+        return render_template("error.html", error="Block not found", coinSymbolLower=coinSymbolLower)
 
     transactions = block["transactions"]
     number = block["number"]
