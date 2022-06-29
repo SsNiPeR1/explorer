@@ -22,7 +22,8 @@ def style(file):
 @app.route("/")
 def index():
     latestBlock = web3.eth.block_number
-    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock)
+    gasPrice = web3.fromWei(web3.eth.gasPrice, "gwei")
+    return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock, gasPrice=gasPrice)
 
 # --- API block --- #
 
