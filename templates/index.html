@@ -5,11 +5,13 @@
         <link rel="stylesheet" href="/static/style.css">
         <script src="/static/redir.js"></script>
         <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
-        
+        <script src="/static/logout.js"></script>
     </head>
     <body>
         <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
         {{ account|safe }}
+        <!-- <a href="/logout" class="upperRight" style="margin-top: 25px; margin-right: 2.5px;">Log out</a> -->
+        <button onclick="logout()" class="upperRight" style="margin-top: 25px; margin-right: 2.5px;"><img src="https://raw.githubusercontent.com/MetaMask/metamask-extension/develop/app/images/icon-16.png">&nbsp;Log out</button>
         <!--
         <input type="text" id="blockNumber" placeholder="Search for a block number...">
         <button id="search" onclick="redirBlock()">Search</button> <br>

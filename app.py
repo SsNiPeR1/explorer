@@ -1,5 +1,5 @@
 from web3 import Web3
-from flask import Flask, render_template, send_file, request, redirect
+from flask import Flask, render_template, send_file, request, redirect, Response
 import json
 
 config = open('config.json')
@@ -50,6 +50,7 @@ def api_txhash(txhash):
 
 @app.route("/api/balance/<address>")
 def api_balance(address):
+    address = web3.toChecksumAddress(address)
     balance = str(web3.eth.getBalance(address))
     return balance
 # --- End API block --- #
@@ -150,7 +151,9 @@ def bloominfo(block):
 
 
 @app.route("/account/<address>")
+@app.route("/address/<address>")
 def account(address):
+    address = web3.toChecksumAddress(address)
     balance = web3.eth.getBalance(address)
     nonce = web3.eth.getTransactionCount(address)
     balance_eth = web3.fromWei(balance, "ether")
@@ -218,7 +221,6 @@ def define_redirect():
 @app.route("/contractInfo")
 def contractinfo():
     return render_template("contractinfo.html", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
-
 
 # --- End Explorer block --- #
 app.run(host="0.0.0.0")

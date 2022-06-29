@@ -112,3 +112,26 @@ a:hover {
     top:0;
     right:0;
 }
+
+button {
+    font-size: 14px;
+    font-family: 'Inconsolata', monospace;
+    transition: all 0.3s ease-in-out;
+    background-color: #191919;
+    color: #909090;
+    border: 1px solid #262626;
+    text-align: center;
+    line-height: 4px;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    height: 30px;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #8a8a8a;
+    border: 1px solid #252525;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
