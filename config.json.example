@@ -2,5 +2,5 @@
     "coinName": "ResinCoin",
     "coinSymbol": "RESIN",
     "coinSymbolLower": "Resin",
-    "rpcUrl": "https://cum.ssniper1.ml"
+    "rpcUrl": "http://144.91.110.55:8545"
 }
