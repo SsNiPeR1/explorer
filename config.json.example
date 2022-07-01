@@ -2,5 +2,5 @@
     "coinName": "ResinCoin",
     "coinSymbol": "RESIN",
     "coinSymbolLower": "Resin",
-    "rpcUrl": "http://144.91.110.55:8545"
+    "rpcUrl": "https://mainnet.resincoin.ml"
 }
