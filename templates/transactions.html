@@ -13,7 +13,7 @@
             {% if transaction == "None" %}
                 <p class="codebox">No transactions found.</p>
             {% else %}
-                <p class="codebox"><a href='/tx/{{ transaction }}'>{{ transaction }}</a><br></p>
+                <p class="codebox"><a href='/hash/{{ transaction }}'>{{ transaction }}</a><br></p>
             {% endif %}
         {% endfor %}
         </p>

@@ -1,5 +1,5 @@
 from web3 import Web3
-from flask import Flask, render_template, send_file, request, redirect, Response
+from flask import Flask, render_template, send_file, request, redirect, url_for
 import json
 
 config = open('config.json')
@@ -13,7 +13,8 @@ rpcUrl = cfg['rpcUrl']
 app = Flask(__name__)
 web3 = Web3(Web3.HTTPProvider(rpcUrl))
 
-
+def site():
+    app.run(host="0.0.0.0")
 @app.route("/static/<file>")
 def style(file):
     return send_file("static/{file}".format(file=file))
@@ -22,7 +23,6 @@ def style(file):
 @app.route("/")
 def index():
     account = request.cookies.get('account')
-    print(account)
     if account is None:
         account = "<a class=\"enableEthereumButton upperRight\" style=\"cursor: pointer;\">Connect MetaMask</a>"
         hasAccount = False
@@ -60,9 +60,13 @@ def api_balance(address):
 # --- Explorer block --- #
 
 
-@app.route("/block/<int:number>")
+@app.route("/block/<number>")
 def block(number):
-
+    try:
+        intNumber = int(number)
+        number = web3.eth.get_block(intNumber)['hash'].hex()
+    except ValueError:
+        pass
     try:
         block = web3.eth.get_block(number)
     except:
@@ -110,8 +114,13 @@ def block(number):
                            transactionsRoot=str(transactionsRoot), uncles=str(uncles), coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
 
-@app.route("/block/<int:number>/uncles")
+@app.route("/block/<number>/uncles")
 def uncles(number):
+    try:
+        intNumber = int(number)
+        number = web3.eth.get_block(intNumber)['hash'].hex()
+    except ValueError:
+        pass
     try:
         block = web3.eth.get_block(number)
     except:
@@ -124,8 +133,13 @@ def uncles(number):
     return render_template("uncles.html", uncles=parsed, number=number, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
 
-@app.route("/block/<int:number>/transactions")
+@app.route("/block/<number>/transactions")
 def transactions(number):
+    try:
+        intNumber = int(number)
+        number = web3.eth.get_block(intNumber)['hash'].hex()
+    except ValueError:
+        pass
     try:
         block = web3.eth.get_block(number)
     except:
@@ -141,7 +155,7 @@ def transactions(number):
     return render_template("transactions.html", transactions=parsed, number=number, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
 
-@app.route("/bloominfo/<int:block>")
+@app.route("/bloominfo/<block>")
 def bloominfo(block):
     try:
         block = web3.eth.get_block(block)
@@ -170,7 +184,7 @@ def tx(txhash):
     except:
         return render_template("error.html", error="Transaction not found")
     txFrom = tx["from"]
-    txTo = tx["to"]
+    txTo = [web3.eth.get_transaction_receipt(txhash)["contractAddress"], "c"]
     txGas = tx["gas"]
     gasPriceWei = tx["gasPrice"]
     txGasPriceUnformatted = web3.fromWei(gasPriceWei, "ether")
@@ -182,20 +196,38 @@ def tx(txhash):
     txValue = format(txValueUnformatted, '.18f')
     txBlockHash = tx["blockHash"]
     txBlockNumber = tx["blockNumber"]
+    if not txBlockNumber:
+        txStatus = "Unconfirmed"
+    else:
+        latestBlock = web3.eth.block_number
+        txStatus = f"Confirmed in block {txBlockNumber} ({latestBlock - txBlockNumber} blocks ago)"
+
+    
 
     return render_template("tx.html", coinName=coinName, txFrom=txFrom, txTo=txTo, txGas=txGas, txGasPrice=txGasPrice,
                            txHash=txHash, txNonce=txNonce, txValue=txValue, txBlockHash=txBlockHash,
-                           txBlockNumber=txBlockNumber, coinSymbol=coinSymbol, coinSymbolLower=coinSymbolLower)
+                           txBlockNumber=txBlockNumber, coinSymbol=coinSymbol, coinSymbolLower=coinSymbolLower, txStatus=txStatus)
 
+@app.route("/hash/<hash>")
+def hash(hash):
+    try:
+        web3.eth.getTransaction(hash)
+        return redirect(f"/tx/{hash}")
+    except:
+        try:
+            web3.eth.get_block(hash)
+            return redirect(f"/block/{hash}")
+        except:
+            return render_template("error.html", error="Neither block nor transaction with this hash has not been found")
 
 @app.route('/', methods=['POST'])
 def define_redirect():
     text = request.form['text']
-    type = "a"
+    type = ""
     if len(text) == 42 and text.startswith("0x"):
         type = "account"
     elif len(text) == 66 and text.startswith("0x"):
-        type = "txhash"
+        type = "hash"
     else:
         try:
             if int(text):
@@ -207,10 +239,10 @@ def define_redirect():
         print(type)
         del type
         return redirect("/account/" + text)
-    if type == "txhash":
+    if type == "hash":
         print(type)
         del type
-        return redirect("/tx/" + text)
+        return redirect("/hash/" + text)
     if type == "block":
         print(type)
         del type
@@ -225,4 +257,4 @@ def contractinfo():
     return render_template("contractinfo.html", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
 # --- End Explorer block --- #
-app.run(host="0.0.0.0")
+app.run(host="127.0.0.1")

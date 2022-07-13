@@ -8,23 +8,24 @@
     </head>
     <body>
         <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
-        {% if not txTo %}
-            Transasction {{ txHash }} is a contract creation transaction.
+        Transaction {{ txHash }}:
+        {% if txTo[1] == "c" %}
             <p class="codebox">
                 From:  <a href="/account/{{ txFrom }}">{{ txFrom }}</a> <br>
-                To: <a href="/contractInfo">more info</a> <br>
+                Creates: <a href="/account/{{ txTo[0] }}">{{ txTo[0] }}</a> (Contract address) <br>
                 Value: {{ txValue }} {{ coinSymbol }} <br>
                 Gas used: {{ txGas }} <br>
-                Gas price: {{ txGasPrice }} {{ coinSymbol }}
+                Gas price: {{ txGasPrice }} {{ coinSymbol }} <br>
+                Status: {{ txStatus }} <br>
             </p>
         {% else %}
-            Transaction {{ txHash }}:
             <p class="codebox">
                 From: <a href="/account/{{ txFrom }}">{{ txFrom }}</a> <br>
                 To: <a href="/account/{{ txTo }}">{{ txTo }}</a> <br>
                 Value: {{ txValue }} {{ coinSymbol }} <br>
                 Gas used: {{ txGas }} <br>
-                Gas price: {{ txGasPrice }} {{ coinSymbol }}
+                Gas price: {{ txGasPrice }} {{ coinSymbol }} <br>
+                Status: {{ txStatus }} <br>
             </p>
         {% endif %}
         
