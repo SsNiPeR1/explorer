@@ -1,40 +1,37 @@
 <html>
-    <head>
-        <title>{{ coinSymbolLower }}Scan</title>
-        <meta name="viewport" content="width=device-width, initial-scale=0.75">
-        <link rel="stylesheet" href="/static/style.css">
-        <script src="/static/redir.js"></script>
-        <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
-        <script src="/static/logout.js"></script>
-    </head>
-    <body>
-        <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
-        {{ account|safe }}
-        <!-- <a href="/logout" class="upperRight" style="margin-top: 25px; margin-right: 2.5px;">Log out</a> -->
-        {% if hasAccount %}
-            <button onclick="logout()" class="upperRight" style="margin-top: 25px; margin-right: 2.5px;"><img src="https://raw.githubusercontent.com/MetaMask/metamask-extension/develop/app/images/icon-16.png">&nbsp;Log out</button>
-        {% endif %}
-        <!--
-        <input type="text" id="blockNumber" placeholder="Search for a block number...">
-        <button id="search" onclick="redirBlock()">Search</button> <br>
-        <input type="text" id="txHash" placeholder="Search for a transaction...">
-        <button id="search" onclick="redirTxHash()">Search</button> <br>
-        <input type="text" id="address" placeholder="Search for an address...">
-        <button id="search" onclick="redirAddress()">Search</button> <br>
-        <p>Current number of blocks in the network: <a href=/block/{{ latestBlock }}>{{ latestBlock }}</a></p>
-        -->
-        <div class="center">
+
+<head>
+    <title>{{ coinSymbolLower }}Scan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/redir.js"></script>
+    <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+    <script src="/static/logout.js"></script>
+</head>
+
+<body>
+    <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
+    {{ account|safe }}
+    {% if hasAccount %}
+    <button onclick="logout()" class="upperRight" style="margin-top: 25px; margin-right: 2.5px;"><img
+            src="https://raw.githubusercontent.com/MetaMask/metamask-extension/develop/app/images/icon-16.png">&nbsp;Log
+        out</button>
+    {% endif %}
+    <div class="center">
         <form method="POST" class="center">
             <input name="text" placeholder="Search for an address, block number or transaction..." size="50"> <br>
         </form>
-        </div>
-        <p class="lowerLeft">There are <a href="/block/{{ latestBlock }}">{{ latestBlock }}</a> blocks in the network.</p>
-        <p class="lowerLeft" style="margin-bottom: 25px; margin-left: -1px;">⛽ {{ gasPrice }} Gwei</p>
-        <button onclick="setNetwork()" class="lowerLeft" style="margin-bottom: 50px; margin-left: -1px; height: 25px;">Add ResinCoin to Metamask!&nbsp;<img src="https://raw.githubusercontent.com/MetaMask/metamask-extension/develop/app/images/icon-16.png"></button>
-        <p class="lowerRight"><a href="https://github.com/SsNiPeR1/explorer">GitHub <i class='fab fa-github'></a></i></p>
-        <!--<p class="lowerRight" style="margin-bottom: 25px;">You can <a onclick="donate()">donate</a> us with ResinCoin!</p>-->
-        <button class="lowerRight donateButton" style="margin-bottom: 25px;">donate</button>
-    </body>
-    <script src="/static/ethers-5.6.esm.min.js"></script>
-    <script src="/static/connect.js"></script>
+    </div>
+    <p class="lowerLeft">There are <a href="/block/{{ latestBlock }}">{{ latestBlock }}</a> blocks in the network.</p>
+    <p class="lowerLeft" style="margin-bottom: 25px; margin-left: -1px;">⛽ {{ gasPrice }} Gwei</p>
+    <button onclick="setNetwork()" class="lowerLeft" style="margin-bottom: 50px; margin-left: -1px; height: 25px;">Add
+        ResinCoin to Metamask!&nbsp;<img
+            src="https://raw.githubusercontent.com/MetaMask/metamask-extension/develop/app/images/icon-16.png"></button>
+    <p class="lowerRight"><a href="https://github.com/SsNiPeR1/explorer">GitHub <i class='fab fa-github'></a></i></p>
+    <button class="lowerRight donateButton" style="margin-bottom: 25px;">Donate us with {{ coinSymbolLower
+        }}Coin!</button>
+</body>
+<script src="/static/ethers-5.6.esm.min.js"></script>
+<script src="/static/connect.js"></script>
+
 </html>

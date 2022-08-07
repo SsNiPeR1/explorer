@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <title>{{ coinSymbolLower }}Scan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/connect.js"></script>
+    <script src="/static/redir.js"></script>
+    <script src="https://kit.fontawesome.com/e9230a7663.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1><a href="/" class="a">{{ coinSymbolLower }}Scan <i class='fab fa-ethereum'></i></a></h1>
+    <p class="codebox">
+        Token address: {{ tokenAddress }} <br>
+        Token name: {{ tokenName }} <br>
+        Token symbol: {{ tokenSymbol }} <br>
+        Token decimals: {{ tokenDecimals }} <br>
+        Token total supply: {{ tokenTotalSupply }} <br>
+        <br>
+        <button id="addToken">Add this token to MetaMask!</button>
+        <script>
+            var tokenAddress = "{{ tokenAddress }}";
+            var tokenName = "{{ tokenName }}";
+            var tokenSymbol = "{{ tokenSymbol }}";
+            var tokenDecimals = "{{ tokenDecimals }}";
+            var tokenTotalSupply = "{{ tokenTotalSupply }}";
+            document.getElementById("addToken").addEventListener("click", function () { addToken(tokenAddress, tokenSymbol, tokenDecimals) }, false);
+        </script>
+    </p>
+
+</html>

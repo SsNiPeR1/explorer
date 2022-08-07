@@ -2,8 +2,10 @@ from web3 import Web3
 from flask import Flask, render_template, send_file, request, redirect, url_for
 import json
 
+
 config = open('config.json')
 cfg = json.load(config)
+abi = open('abi/erc20.abi.json').read()
 
 coinName = cfg['coinName']
 coinSymbol = cfg['coinSymbol']
@@ -13,8 +15,38 @@ rpcUrl = cfg['rpcUrl']
 app = Flask(__name__)
 web3 = Web3(Web3.HTTPProvider(rpcUrl))
 
+
 def site():
     app.run(host="0.0.0.0")
+
+
+def isToken(address):
+    if len(web3.eth.getCode(address)) < 40:
+        return False
+    else:
+        return True
+
+
+def getDecimals(address):
+    contract = web3.eth.contract(address=address, abi=abi)
+    return contract.functions.decimals().call()
+
+
+def getSymbol(address):
+    contract = web3.eth.contract(address=address, abi=abi)
+    return contract.functions.symbol().call()
+
+
+def getName(address):
+    contract = web3.eth.contract(address=address, abi=abi)
+    return contract.functions.name().call()
+
+
+def getTotalSupply(address):
+    contract = web3.eth.contract(address=address, abi=abi)
+    return contract.functions.totalSupply().call()
+
+
 @app.route("/static/<file>")
 def style(file):
     return send_file("static/{file}".format(file=file))
@@ -28,9 +60,13 @@ def index():
         hasAccount = False
     else:
         acc = account
-        acc = web3.toChecksumAddress(acc)
+        try:
+            acc = web3.toChecksumAddress(acc)
+        except:
+            return render_template("error.html", error="Not even an address!")
         hasAccount = True
-        account = "<p class=\"upperRight\" style=\"margin-right: 44ch;\">Your address: </p><a class=\"upperRight\" href=\"/account/{acc}\">{acc}</a>".format(acc=acc)
+        account = "<p class=\"upperRight\" style=\"margin-right: 44ch;\">Your address: </p><a class=\"upperRight\" href=\"/account/{acc}\">{acc}</a>".format(
+            acc=acc)
     latestBlock = web3.eth.block_number
     gasPrice = web3.fromWei(web3.eth.gasPrice, "gwei")
     return render_template("index.html", coinSymbolLower=coinSymbolLower, latestBlock=latestBlock, gasPrice=gasPrice, account=account, hasAccount=hasAccount)
@@ -169,7 +205,14 @@ def bloominfo(block):
 @app.route("/account/<address>")
 @app.route("/address/<address>")
 def account(address):
-    address = web3.toChecksumAddress(address)
+    try:
+        address = web3.toChecksumAddress(address)
+    except:
+        return render_template("error.html", error="Not even an address!", coinSymbolLower=coinSymbolLower)
+
+    if isToken(address):
+        # return render_template("error.html", error="заглушка для токена", coinSymbolLower=coinSymbolLower)
+        return redirect(f"/token/{address}")
     balance = web3.eth.getBalance(address)
     nonce = web3.eth.getTransactionCount(address)
     balance_eth = web3.fromWei(balance, "ether")
@@ -202,11 +245,10 @@ def tx(txhash):
         latestBlock = web3.eth.block_number
         txStatus = f"Confirmed in block {txBlockNumber} ({latestBlock - txBlockNumber} blocks ago)"
 
-    
-
     return render_template("tx.html", coinName=coinName, txFrom=txFrom, txTo=txTo, txGas=txGas, txGasPrice=txGasPrice,
                            txHash=txHash, txNonce=txNonce, txValue=txValue, txBlockHash=txBlockHash,
                            txBlockNumber=txBlockNumber, coinSymbol=coinSymbol, coinSymbolLower=coinSymbolLower, txStatus=txStatus)
+
 
 @app.route("/hash/<hash>")
 def hash(hash):
@@ -218,7 +260,8 @@ def hash(hash):
             web3.eth.get_block(hash)
             return redirect(f"/block/{hash}")
         except:
-            return render_template("error.html", error="Neither block nor transaction with this hash has not been found")
+            return render_template("error.html", error="Neither block nor transaction with this hash has not been found", coinSymbolLower=coinSymbolLower)
+
 
 @app.route('/', methods=['POST'])
 def define_redirect():
@@ -251,10 +294,22 @@ def define_redirect():
     return render_template("error.html", error="Malformed input", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
 
 
+@app.route("/token/<address>")
+def token(address):
+    decimals = getDecimals(address)
+    name = getName(address)
+    symbol = getSymbol(address)
+    totalSupply = getTotalSupply(address)
+    totalSupply = web3.fromWei(totalSupply, "ether")
+    totalSupply = format(totalSupply, '.18f')
+    return render_template("token.html", tokenAddress=address, tokenDecimals=decimals, tokenName=name, tokenSymbol=symbol, tokenTotalSupply=totalSupply, coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
+
 @app.route("/contractinfo")
 @app.route("/contractInfo")
 def contractinfo():
     return render_template("contractinfo.html", coinSymbolLower=coinSymbolLower, coinSymbol=coinSymbol)
+
 
 # --- End Explorer block --- #
 app.run(host="127.0.0.1")
