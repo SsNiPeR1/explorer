@@ -1,8 +1,10 @@
 from web3 import Web3
 from flask import Flask, render_template, send_file, request, redirect, url_for
 import json
+from threading import Lock
+from flask_socketio import SocketIO, emit
 
-
+async_mode = None
 config = open('config.json')
 cfg = json.load(config)
 abi = open('abi/erc20.abi.json').read()
@@ -13,7 +15,31 @@ coinSymbolLower = cfg['coinSymbolLower']
 rpcUrl = cfg['rpcUrl']
 
 app = Flask(__name__)
+socketio = SocketIO(app, async_mode=async_mode)
+thread = None
+thread_lock = Lock()
 web3 = Web3(Web3.HTTPProvider(rpcUrl))
+
+
+def background_thread():
+    """Example of how to send server generated events to clients."""
+    count = 0
+    while True:
+        socketio.sleep(1)
+        count += 1
+        blocks = web3.eth.blockNumber
+        socketio.emit('my_response',
+                      {'data': str(blocks), 'count': count})
+
+
+@socketio.event
+def connect():
+    global thread
+    with thread_lock:
+        if thread is None:
+            thread = socketio.start_background_task(background_thread)
+    block = web3.eth.blockNumber
+    emit('my_response', {'data': str(block), 'count': 0})
 
 
 def site():
@@ -312,4 +338,5 @@ def contractinfo():
 
 
 # --- End Explorer block --- #
-app.run(host="127.0.0.1")
+# app.run(host="127.0.0.1")
+socketio.run(app)
