@@ -1,4 +1,7 @@
 # Explorer
+
+<b>THE PROJECT IS UNMAINTAINED, PLEASE USE OTHER STABLE EXPLORERS.</b>
+
 So, I disliked how other Ethereum explorers were hard to set up and use, and I wished to create another one, with simplicity in setup in mind.
 
 I hope you will like it, because everything you need to set is coin name (ETH for Ethereum, ETC for Ethereum classic, etc.) and its RPC URL (https://www.ethercluster.com/etc for Ethereum Classic)
